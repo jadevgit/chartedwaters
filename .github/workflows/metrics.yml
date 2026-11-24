@@ -1,0 +1,30 @@
+name: Repo Metrics
+on:
+  schedule:
+    # Runs once a day at midnight
+    - cron: "0 0 * * *"
+  workflow_dispatch:
+
+jobs:
+  github-metrics:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: lowlighter/metrics@latest
+        with:
+          token: ${{ secrets.METRICS_TOKEN }}
+          template: repository
+          filename: github-metrics.svg
+          # Target your specific repo
+          user: YOUR_USERNAME
+          repo: YOUR_REPO_NAME
+          # Base sections to display
+          base: header, activity, community, repositories, metadata
+          # Contributor & code-volume plugins
+          plugin_contributors: yes
+          plugin_contributors_contributions: yes
+          plugin_lines: yes
+          plugin_languages: yes
+          plugin_languages_indepth: yes
+          plugin_languages_ignored: markdown, text
