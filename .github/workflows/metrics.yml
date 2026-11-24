@@ -1,8 +1,8 @@
 name: Repo Metrics
+
 on:
   schedule:
-    # Runs once a day at midnight
-    - cron: "0 0 * * *"
+    - cron: "0 0 * * *" # Runs daily
   workflow_dispatch:
 
 jobs:
@@ -16,15 +16,15 @@ jobs:
           token: ${{ secrets.METRICS_TOKEN }}
           template: repository
           filename: github-metrics.svg
-          # Target your specific repo
-          user: YOUR_USERNAME
-          repo: YOUR_REPO_NAME
-          # Base sections to display
-          base: header, activity, community, repositories, metadata
-          # Contributor & code-volume plugins
+          
+          # Keep base sections light
+          base: header, activity, community, metadata
+          
+          # Plugins for this specific repo
           plugin_contributors: yes
-          plugin_contributors_contributions: yes
           plugin_lines: yes
+          
+          # Keep languages enabled, but turn OFF indepth mode for speed
           plugin_languages: yes
-          plugin_languages_indepth: yes
+          plugin_languages_indepth: false 
           plugin_languages_ignored: markdown, text
