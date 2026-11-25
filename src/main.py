@@ -11,10 +11,20 @@ def importCSV():
 def checkdata(dfs):
     
     for key, value in dfs.items():
-        value.fillna({"Calories": 130}, inplace=True) # Default calories value
+        value.drop_duplicates()
+        value.fillna({"Calories": 130}) # Default calories value
         value['Date'] = pd.to_datetime(value['Date'], format='mixed') #DT Correct format check
-        value = value.dropna(inplace=True) # N/A Check
-    print(dfs)
+        value = value.dropna() # N/A Check
+        value['Identifier'] = ''
+    return dfs
+
+def mergedata(df):
+    mdf = []
+    for key,item in df.items():
+        mdf.append(item)
+    return pd.concat(mdf)
+        
+
 
 
 
@@ -23,6 +33,7 @@ def checkdata(dfs):
 def main():
     dfs = importCSV()
     clean_dfs = checkdata(dfs)
+    merge_dfs = mergedata(clean_dfs)
     
 
 
