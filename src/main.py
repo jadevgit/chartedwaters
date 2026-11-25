@@ -1,7 +1,47 @@
 import pandas as pd 
-from pathlib import path
-import matplotlib.pyplot as plt
+from pathlib import Path
 
 def importCSV():
-    folder_path = "./src/data"
-    return {file_path.stem: pd.read_csv(file_path) for file_path in folder_path.glob("*.csv")}
+    folder_path = Path("./src/data")
+    csv_files = list(folder_path.glob("*.csv"))
+        
+    df = {file_path.stem: pd.read_csv(file_path) for file_path in csv_files}
+    return df
+
+def checkdata(dfs):
+    cleaned_dfs = {}
+    for key, value in dfs.items():
+        df_copy = value.copy()
+        
+        df_copy = df_copy.drop_duplicates()
+        df_copy = df_copy.fillna({"Calories": 130}) # Default calories value
+        
+        if 'Date' in df_copy.columns:
+            df_copy['Date'] = pd.to_datetime(df_copy['Date'], format='mixed', errors='coerce')
+            
+        df_copy = df_copy.dropna() # N/A Check
+        df_copy['Identifier'] = key # Storing filename stem as identifier
+        
+        cleaned_dfs[key] = df_copy
+        
+    return cleaned_dfs
+
+def mergedata(df_dict):
+    if not df_dict:
+        return pd.DataFrame()
+    mdf = list(df_dict.values())
+    return pd.concat(mdf, ignore_index=True)
+
+def main():
+    dfs = importCSV()
+    if not dfs:
+        return
+        
+    clean_dfs = checkdata(dfs)
+    merge_dfs = mergedata(clean_dfs)
+    
+    if not merge_dfs.empty:
+        merge_dfs.to_csv("merged.csv", index=False)
+
+if __name__ == "__main__":
+    main()
