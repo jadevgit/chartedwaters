@@ -32,6 +32,24 @@ def mergedata(df_dict):
     mdf = list(df_dict.values())
     return pd.concat(mdf, ignore_index=True)
 
+
+def menu(question, *options, type=1):
+    print(f"\n{question}")
+
+    for index, option in enumerate(options, start=1):
+        print(f"{index}. {option}")
+
+    while True:
+        try:
+            choice = int(input(f"Please choose an option from the list (1-{len(options)}): "))
+            if choice in range(1, len(options) + 1):
+                if type == 1:
+                    return options[choice - 1]
+                else:
+                    return choice
+        except ValueError:
+            print(f"Please enter a valid number! (1-{len(options)})")
+
 def main():
     dfs = importCSV()
     if not dfs:
