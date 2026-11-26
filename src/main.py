@@ -51,11 +51,33 @@ def menu(question, *options, type=1):
             print(f"Please enter a valid number! (1-{len(options)})")
 
 
-def view_stock_tickets():
+def view_stock_tickets(v=1):
+    tks = []
     mdf = pd.read_csv("src/data/merged.csv")
-    print("\nStock Identifiers: ")
-    for ticket in mdf['Identifier'].unique():
-        print(ticket)
+    if v:
+        print("\nStock Identifiers: ")
+        for ticket in mdf['Identifier'].unique():
+            print(ticket)
+        else:
+            tks.append(ticket)
+    else:
+        for ticket in mdf['Identifier'].unique():
+            tks.append(ticket)
+        return tks
+
+def visualise():
+    usr_choice = menu("Stock Analysis Menu","Summary Statistics","Plot price over time","Plot rolling volatility","Compare multiple stocks","Return to menu",type=2)
+    match usr_choice:
+        case 1: summary_stat()
+
+
+
+def summary_stat():
+    tickets = view_stock_tickets(0)
+    menu("Select stock to view", *tickets)
+
+
+
 
 
 def quit():
