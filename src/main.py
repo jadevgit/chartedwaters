@@ -50,6 +50,18 @@ def menu(question, *options, type=1):
         except ValueError:
             print(f"Please enter a valid number! (1-{len(options)})")
 
+
+def view_stock_tickets():
+    mdf = pd.read_csv("src/data/merged.csv")
+    print("\nStock Identifiers: ")
+    for ticket in mdf['Identifier'].unique():
+        print(ticket)
+
+
+def quit():
+    print("Thank you for using the stock analysis program")
+    exit()
+
 def main():
     dfs = importCSV()
     if not dfs:
@@ -59,7 +71,13 @@ def main():
     merge_dfs = mergedata(clean_dfs)
     
     if not merge_dfs.empty:
-        merge_dfs.to_csv("merged.csv", index=False)
-
+        merge_dfs.to_csv("src/data/merged.csv", index=False)
+    
+    while True:
+        usr_choice = menu("Stock Analytics Menu","View available stocks","Explore and Visualise stock data","Exit",type=2)
+        match usr_choice:
+            case 1: view_stock_tickets()
+            case 2: visualise()
+            case 3: quit()
 if __name__ == "__main__":
     main()
